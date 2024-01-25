@@ -3,12 +3,13 @@ import NavBar from './components/NavBar/NavBar.js'
 import Hero from './components/Hero/Hero.js'
 import styles from './App.module.css'
 import { useEffect, useState } from 'react'
-import { fetchTopAlbums } from './api/api'
+import { fetchTopAlbums , fetchNewAlbums } from './api/api'
 import Section from './components/Section/Section.js'
 
 function App() {
 
   const [topAlbumSongs, setTopAlbumSongs] = useState([])
+  const [newAlbumSongs, setNewAlbumSongs] = useState([])
   const [value] = useState(0);
 
 
@@ -28,7 +29,17 @@ function App() {
 
   }
 
-
+  const generateNewAlbumSongs = async () => {
+    try {
+      const newAlbumSongs = await fetchNewAlbums()
+      setNewAlbumSongs(newAlbumSongs);
+     
+    }
+    catch (error) {
+      console.log(error)
+      return null
+    }
+  }
 
   
 
@@ -39,6 +50,7 @@ function App() {
   useEffect(() => {
     
     generateTopAlbumSongs();
+    generateNewAlbumSongs();
   }, [])
   
   
@@ -48,6 +60,7 @@ function App() {
       <Hero />
       <div className={styles.sectionWrapper}>
         <Section type='album' title='Top Albums' data={topAlbumSongs} />
+        <Section type='album' title='New Albums' data={newAlbumSongs} />
       </div>
     </>
   )
